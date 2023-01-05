@@ -1,0 +1,36 @@
+SetDirectory[NotebookDirectory[]];
+<< ToMatlab.m
+ClearAll["Global`*"];
+
+
+a1 = 0.011700304354471077;
+a2 = 0.004039172797184843;
+a3 = 0.0005768400857023793;
+
+b1 = -2.7854440230742807;
+b2 = 1.8466235388748446;
+b3 = -2.7356942320086586;
+
+
+
+
+
+
+g[x_] := a1*Sin[x + b1] + a2*Sin[2*x + b2] + a3*Sin[3*x + b3];
+
+factor[x_] := -0.5*(1 + x^2);
+dotTheta = {factor[
+     y[1]]*(g[phi[2] - phi[1]] + g[-phi[1]] - g[phi[1]] - g[phi[2]]), 
+   factor[y[2]]*(g[phi[1] - phi[2]] + g[-phi[2]] - g[phi[1]] - 
+      g[phi[2]])};
+DotTheta = 
+  dotTheta /. {phi[1] -> 2*ArcCot[y[1]], phi[2] -> 2*ArcCot[y[2]]};
+F = TrigExpand[DotTheta];
+G = Together[F];
+Q = Denominator[G[[1]]];
+Q2 = Denominator[G[[2]]];
+P[1] = Numerator[G[[1]]];
+P[2] = Numerator[G[[2]]];
+QMatlab = ToMatlab[Q]
+P1Matlab = ToMatlab[P[1]]
+P2Matlab = ToMatlab[P[2]]
