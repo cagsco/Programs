@@ -1,0 +1,65 @@
+SetDirectory[NotebookDirectory[]];
+<< ToMatlab.m
+ClearAll["Global`*"];
+
+L = 2; (* maximum harmoncic*)
+K = 4; (*Number of oscillators*)
+r = 3; (*Number of negihbours*)
+p = 1; (*(the reduced parameter varphi)*)
+A = Table[
+   a[i], {i, 1, 
+    L}]; (*Amplitude Coeefficient of the coupliing function g*)
+B = Table[
+   b[i], {i, 1, L}];(*Phase Coeefficient of the coupliing function g*)
+
+
+g[x_] := Sum[a[j]*Sin[j*x + b[j]], {j, 1, L}];
+
+h = CompleteGraph[K];
+H = AdjacencyMatrix[h] // MatrixForm;
+CC = Table[ff[i] = AdjacencyList[h, i], {i, 1, K}];
+
+
+
+Y = Table[x[i], {i, 1, K - 1}];
+
+Co[x_] := (x^2 - 1)/(1 + x^2);
+S[x_] := (2*x)/(1 + x^2);
+
+
+
+
+SYIK = Table[
+   If[CC[[i, j]] == K, 0, S[x[CC[[i, j]]]]], {i, 1, K}, {j, 1, r}];
+CYIK = Table[
+   If[CC[[i, j]] == K, 1, Co[x[CC[[i, j]]]]], {i, 1, K}, {j, 1, r}];
+
+
+
+
+
+F = Table[-0.5*
+    Sum[a[j]*(-ChebyshevU[j - 1, Co[x[i]]]*S[x[i]]*
+         ChebyshevT[j, CYIK[[i, k]]]*Cos[b[j]]
+        + 
+        ChebyshevU[j - 1, CYIK[[i, k]]]*SYIK[[i, k]]*
+         ChebyshevT[j, Co[x[i]]]*Cos[b[j]]
+        + ChebyshevT[j, Co[x[i]]]*ChebyshevT[j, CYIK[[i, k]]]*Sin[b[j]]
+        + 
+        ChebyshevU[j - 1, Co[x[i]]]*S[x[i]]*
+         ChebyshevU[j - 1, CYIK[[i, k]]]*SYIK[[i, k]]*Sin[b[j]]
+        - ChebyshevU[j - 1, CYIK[[K, k]]]*SYIK[[K, k]]*Cos[b[j]]
+        - ChebyshevT[j, CYIK[[K, k]]]*Sin[b[j]]), {j, 1, L}, {k, 1, 
+      r}], {i, 1, K - 1}];
+
+G = Together[F]
+Q = Denominator[G[[1]]]
+Q2 = Denominator[G[[2]]]
+Q3 = Denominator[G[[3]]]
+P[1] = Numerator[G[[1]]];
+P[2] = Numerator[G[[2]]];
+P[3] = Numerator[G[[3]]];
+QMatlab = ToMatlab[Q];
+P1Matlab = ToMatlab[P[1]];
+P2Matlab = ToMatlab[P[2]];
+P3Matlab = ToMatlab[P[3]];
