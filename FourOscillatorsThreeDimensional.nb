@@ -4,7 +4,7 @@ ClearAll["Global`*"];
 
 L = 2; (* maximum harmoncic*)
 K = 4; (*Number of oscillators*)
-r = 3; (*Number of negihbours*)
+r = 3; (*Number of neighbours*)
 p = 1; (*(the reduced parameter varphi)*)
 A = Table[
    a[i], {i, 1, 
