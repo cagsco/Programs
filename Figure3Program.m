@@ -1,14 +1,15 @@
 clear; % clear CommandWindow and workspace
- a(1)=-1;
+ %Parameters of the coupling function g(x)=a(1)*sin(x+b(1))+a(2)*sin(2x+b(2))
+ a(1)=-1; 
  b(2)=0;
- sayac=0;
+ 
  AGS=zeros(3,1);
  eps=1e-8;% for sedumi
  bigeps=eps;% for sedumi
  maxiter=400;% for sedumi
  degrees=1:10;
  timescale=1;
- tolerance=5*10^(-5);%5
+ tolerance=5*10^(-5);
  
  
  n=2;%the dimension of the state space
@@ -16,6 +17,7 @@ clear; % clear CommandWindow and workspace
 t=0:0.01:1.57;
 xt=0.5*cos(t);
 plot(t,xt)
+ %the coupling function has the form: g(x)=-sin(x-aa)+rsin(2x)
  for r=0:0.01:0.5
      a(2)=r;
  for aa=0:.01   :1.6-2*r
