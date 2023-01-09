@@ -5,7 +5,7 @@ ClearAll["Global`*"];
 L = 2; (* maximum harmoncic*)
 K = 4; (*Number of oscillators*)
 r = 3; (*Number of neighbours*)
-p = 1; (*(the reduced parameter varphi)*)
+
 A = Table[
    a[i], {i, 1, 
     L}]; (*Amplitude Coeefficient of the coupliing function g*)
@@ -13,7 +13,7 @@ B = Table[
    b[i], {i, 1, L}];(*Phase Coeefficient of the coupliing function g*)
 
 
-g[x_] := Sum[a[j]*Sin[j*x + b[j]], {j, 1, L}];
+g[x_] := Sum[a[j]*Sin[j*x + b[j]], {j, 1, L}]; (*the coupling function g*)
 
 h = CompleteGraph[K];
 H = AdjacencyMatrix[h] // MatrixForm;
@@ -23,8 +23,8 @@ CC = Table[ff[i] = AdjacencyList[h, i], {i, 1, K}];
 
 Y = Table[x[i], {i, 1, K - 1}];
 
-Co[x_] := (x^2 - 1)/(1 + x^2);
-S[x_] := (2*x)/(1 + x^2);
+Co[x_] := (x^2 - 1)/(1 + x^2); (*transformation for cos(\varphi), where x=cot(\varphi/2)*)
+S[x_] := (2*x)/(1 + x^2);      (*transformation for sin(\varphi), where x=cot(\varphi/2)*)
 
 
 
@@ -37,16 +37,16 @@ CYIK = Table[
 
 
 
-
+(*System of y(i)s obtain from the the system of phase differences of \varphi(i)s by using the stereographic state transformatin y(i)=cot(\varphi(i)/2)*)
 F = Table[-0.5*
-    Sum[a[j]*(-ChebyshevU[j - 1, Co[x[i]]]*S[x[i]]*
+    Sum[a[j]*(-ChebyshevU[j - 1, Co[y[i]]]*S[y[i]]*
          ChebyshevT[j, CYIK[[i, k]]]*Cos[b[j]]
         + 
         ChebyshevU[j - 1, CYIK[[i, k]]]*SYIK[[i, k]]*
-         ChebyshevT[j, Co[x[i]]]*Cos[b[j]]
-        + ChebyshevT[j, Co[x[i]]]*ChebyshevT[j, CYIK[[i, k]]]*Sin[b[j]]
+         ChebyshevT[j, Co[y[i]]]*Cos[b[j]]
+        + ChebyshevT[j, Co[y[i]]]*ChebyshevT[j, CYIK[[i, k]]]*Sin[b[j]]
         + 
-        ChebyshevU[j - 1, Co[x[i]]]*S[x[i]]*
+        ChebyshevU[j - 1, Co[y[i]]]*S[y[i]]*
          ChebyshevU[j - 1, CYIK[[i, k]]]*SYIK[[i, k]]*Sin[b[j]]
         - ChebyshevU[j - 1, CYIK[[K, k]]]*SYIK[[K, k]]*Cos[b[j]]
         - ChebyshevT[j, CYIK[[K, k]]]*Sin[b[j]]), {j, 1, L}, {k, 1, 
